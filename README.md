@@ -1,8 +1,15 @@
 # SVC
 Research and simulation of Sparse Vector Coding (SVC) for 6G URLLC. Focused on the error rate analysis of short-packet communications using diversity techniques to meet strict reliability requirements.
-System Model: Define the short-packet regime (finite blocklength).
+System Model:In the short-packet regime, communication is performed using finite and relatively small blocklengths, where each transmitted packet contains only a limited number of symbols. Unlike classical information theory, which assumes infinitely long codewords, practical systems such as URLLC operate under strict latency constraints that require short packets.
+As a result, reliable communication becomes more challenging because:
 
-Coding Technique:Sparse Vector Coding (SVC) represents information using a high-dimensional sparse signal, where only a small number of elements are active while the rest remain zero. The information is jointly conveyed by the indices of the active elements (support) and their modulated values.
+1. There is limited redundancy for error correction
+2. The impact of noise and fading is more pronounced
+3. Coding and detection must be highly efficient and low-latency
+
+Sparse Vector Coding (SVC) is particularly well-suited for this regime, as it leverages sparsity to enable reliable transmission with short packets and reduced decoding complexity.
+
+Coding Technique: Sparse Vector Coding (SVC) represents information using a high-dimensional sparse signal, where only a small number of elements are active while the rest remain zero. The information is jointly conveyed by the indices of the active elements (support) and their modulated values.
 
 At the transmitter, an input bit sequence is divided into two parts. The first part selects the positions of K non-zero elements within a vector of length N, while the second part determines the complex symbols (e.g., QPSK) assigned to those positions. This results in a sparse vector
 
