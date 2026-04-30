@@ -14,8 +14,8 @@ which is transmitted over m time/frequency resources.
 
 At the receiver, the signal is affected by fading and noise. Diversity combining techniques such as Maximum Ratio Combining (MRC), Equal Gain Combining (EGC), or Selection Combining (SC) are first applied to improve the effective SNR. The receiver then performs sparse detection to identify:
 
-The active positions (support recovery)
-The transmitted symbol values
+1.The active positions (support recovery)
+2.The transmitted symbol values
 
 Detection is typically based on correlation or maximum likelihood criteria, exploiting the sparsity structure of the transmitted vector.
 
