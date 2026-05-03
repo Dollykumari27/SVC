@@ -5,11 +5,11 @@ data_egc_dec = load('Dec_time_avg_SVC_egc4.mat');
 data_mrc_dec = load('Dec_time_avg_SVC_mrc5.mat');
 data_sc_dec  = load('Dec_time_avg_SVC_sc3.mat');
 
-% Encoding time averages (using newly provided files)
+% Encoding time averages
 data_svc_enc = load('enc_time_avg_SVC4.mat');
 data_egc_enc = load('enc_time_avg_SVC_egc4.mat');
 data_mrc_enc = load('enc_time_avg_SVC_mrc4.mat');
-data_sc_enc  = load('enc_time_avg_SVC_sc4.mat'); % Note the hyphen in filename
+data_sc_enc  = load('enc_time_avg_SVC_sc4.mat'); 
 
 decoding_means = [mean(data_svc_dec.dec_time_avg_ms), ...
                   mean(data_egc_dec.dec_time_avg_ms), ...
@@ -35,7 +35,7 @@ hBar(1).EdgeColor = 'k';
 hBar(2).FaceColor = [0.8, 0.2, 0.1]; % Red (Encoding)
 hBar(2).EdgeColor = 'k';
 
-% Set Logarithmic Scale (Crucial for visualizing these values together)
+
 set(gca, 'YScale', 'log');
 target_ticks = [10^-2,10^-1, 10^0, 10^1, 10^2];
 set(gca, 'YTick', target_ticks);
@@ -49,6 +49,5 @@ legend({'Decoding time', 'Encoding time'}, 'Location', 'northeast');
 
 % Set Y-axis limits and ticks to match the visual style of your reference
 ylim([10^-1, 20]); % Adjusted based on your specific data ranges
-% ylim([10^-1, max(total_data)*1.2]);
-% yticks([10^-1, 10^0, 10^1, 10^2]);
+
 
