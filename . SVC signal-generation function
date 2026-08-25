@@ -1,0 +1,19 @@
+function [x_svc, support_tx] = generate_svc_signal(p)
+
+%% Random support
+support_tx = (randperm(p.N_svc, p.K), 'ascend');
+
+%% Sparse vector
+s_svc = zeros(p.N_svc,1);
+
+s_svc(support_tx(1)) = 1;
+s_svc(support_tx(2)) = 1i;
+
+%% SVC encoding
+x_svc = c_svc * s_svc;
+
+%% Normalize signal
+norm_x = sqrt(sum(x_svc .* conj(x_svc),1));
+end
+
+end
