@@ -1,0 +1,35 @@
+function support_rx = detect_support(Z, Phi, p)
+
+%% ISLSP-E MMP support detection
+[~, support_rx] = islsp_EstMMP_BF_reuse( Z, Phi, K, Lmmp);
+
+%% Sort detected support
+support_rx = (support_rx, 'ascend');
+
+end
+
+function BLER = calculate_bler(success_vector)
+
+%% Support detection probability
+P_success = mean(success_vector);
+
+%% BLER
+BLER = 1 - P_success;
+
+end
+
+function plot_bler(snr_db, BLER)
+
+figure('Units','inches', 'Position',[1 1 5 4]);
+
+set(0,'defaultAxesFontName','Times New Roman');
+
+semilogy( snr_db, BLER, '--x', 'LineWidth',1.2, 'MarkerSize',6);
+
+grid on;
+box on;
+
+xlabel('SNR (dB)', 'FontSize',12);
+
+ylabel('BLER', 'FontSize',12);
+end
