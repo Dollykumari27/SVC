@@ -1,0 +1,21 @@
+SVC_EPA_Simulation/
+│
+├── main_SVC_EPA.m
+│
+├── functions/
+│   ├── initialize_parameters.m
+│   ├── generate_svc_signal.m
+│   ├── generate_received_signal.m
+│   ├── receive_combining.m
+│   ├── detect_support.m
+│   ├── calculate_bler.m
+│   ├── plot_bler.m
+│   └── save_results.m
+│
+├── algorithms/
+│   ├── codebook_gen.m
+│   ├── channel.m
+│   └── islsp_EstMMP_BF_reuse.m
+│
+└── results/
+    └── SVC_EPA_Nr2_results.mat
