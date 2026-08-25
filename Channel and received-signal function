@@ -1,0 +1,25 @@
+function [y, H, W] = generate_received_signal(x_svc, p, snr)
+
+y = [];
+H = [];
+W = [];
+
+for nr = 1:p.Nr
+
+    %% Complex AWGN
+    noise = (1/sqrt(current_snr)) * (1/sqrt(p.m)) *(1/sqrt(2)) * (randn(p.m,1) + 1i*randn(p.m,1));
+
+    %% Channel
+    [y_temp, H_temp] = channel( x_svc, snr, channel_mode, noise, p.Rep);
+
+    %% Receive combiner
+
+    %% Combine receive branches
+    W = diag(W,W_temp);
+
+    H = [H; H_temp];
+    y = [y; y_temp];
+
+end
+
+end
