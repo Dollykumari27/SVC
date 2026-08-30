@@ -42,11 +42,15 @@ This repository contains all scripts required to reproduce the simulation and nu
 ## 📁 Included Scripts
 
 | Script | Related Figure(s) | Description |
+## 📁 Included Scripts
+
+| Script | Related Figure(s) | Description |
 | :--- | :--- | :--- |
-| `sim_epa_diversity.m` | Fig. 2 (a, b,c) | Computes BER/SER vs. SNR under the EPA (Extended Pedestrian A) channel model comparing MRC, EGC, and SC under varying hardware impairment levels ($\kappa$). |
-| `sim_eva_diversity.m` | Fig. 3 (a, b,c) | Computes BER/SER vs. SNR under the EVA (Extended Vehicular A) channel model comparing MRC, EGC, and SC with residual transceiver distortions. |
-| `svc_encoder_decoder.m` | Helper / Core | Implements sparse vector modulation, mapping, and sparsity-aware detection routines. |
-| `channel_models.m` | Helper | Generates multipath fading tap profiles and Doppler spectra for EPA and EVA channel realizations. |
+| `main_svc_diversity_simulation.m` | Fig. 2 (a, b, c) & Fig. 3 (a, b, c) | Evaluates and plots BLER vs. SNR performance comparing **MRC**, **EGC**, and **SC** under realistic channel models (EPA/EVA) and transceiver hardware impairments. |
+| `svc_diversity_combiner.m` | Core Function | Modular combining function implementing Maximal Ratio Combining (MRC), Equal Gain Combining (EGC), and Selection Combining (SC). |
+| `islsp_EstMMP_BF_reuse.m` | Helper / Core | Implements the Multipath Matching Pursuit (MMP) sparse signal recovery algorithm. |
+| `algo_omp.m` | Helper / Core | Implements the Orthogonal Matching Pursuit (OMP) sparse recovery algorithm. |
+| `channel.m` | Helper | Simulates multipath fading channel realizations across standard profiles (EPA, EVA, ETU, Rayleigh, AWGN). |
 
 ## 📂 Required Files
 
