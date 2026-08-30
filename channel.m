@@ -4,7 +4,7 @@ if mode == 1 % AWGN channel
     channel = 1;
     received_signal_dup = signal + noise;
 elseif mode==2 % IID Rayleigh
-    channel_spread      = 1/sqrt(m)*1/sqrt(2)*(randn(m,1) + 1i*randn(m,1));  % I.I.D Rayleigh channel condition
+    channel_spread      = 1/sqrt(2)*1/sqrt(2)*(randn(m,1) + 1i*randn(m,1));  % I.I.D Rayleigh channel condition
     channel             = diag(channel_spread);
     received_signal_dup = channel*signal+noise;
 elseif mode==3  % EPA delay profile model
