@@ -1,4 +1,11 @@
-# SVC
+# Error Rate Analysis of Sparse Vector Coding withDiversity Techniques in the Presence of TransceiverHardware Impairments
+Manuscript ID: IEEE LAT Submission ID: 9490 Authors:
+
+Dolly Kumari
+Maddu Narasimha
+Pradeep Kumar Rathore
+Shravan Kumar Bandari 
+
 Research and simulation of Sparse Vector Coding (SVC) for 6G URLLC. Focused on the error rate analysis of short-packet communications using diversity techniques to meet strict reliability requirements.
 System Model:In the short-packet regime, communication is performed using finite and relatively small blocklengths, where each transmitted packet contains only a limited number of symbols. Unlike classical information theory, which assumes infinitely long codewords, practical systems such as URLLC operate under strict latency constraints that require short packets.
 As a result, reliable communication becomes more challenging because:
@@ -13,9 +20,7 @@ Coding Technique: Sparse Vector Coding (SVC) represents information using a high
 
 At the transmitter, an input bit sequence is divided into two parts. The first part selects the positions of K non-zero elements within a vector of length N, while the second part determines the complex symbols (e.g., QPSK) assigned to those positions. This results in a sparse vector
 
-x∈C
-N
-,K≪N
+x∈CN,K≪N
 
 which is transmitted over m time/frequency resources.
 
