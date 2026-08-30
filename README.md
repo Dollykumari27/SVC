@@ -52,8 +52,8 @@ This repository contains all scripts required to reproduce the simulation and nu
 | `algo_mmp.m` | Helper / Core | Implements the Multipath Matching Pursuit (MMP) sparse recovery algorithm. |
 | `channel.m` | Helper | Simulates multipath fading channel realizations across standard profiles (EPA, EVA, ETU, Rayleigh, AWGN). |
 | `Ideal_vs_nonideal.m` | Core| Modular combining implementing Maximal Ratio Combining (MRC) with hardware impairment |
-| `Latency_SVC_DiversityComb.m` | Core | Latencyimplementing Maximal Ratio Combining (MRC), Equal Gain Combining (EGC), and Selection Combining (SC), and SVC|
-| `.m` | Core ||
+| `Latency_SVC_DiversityComb.m` | Core | Latency implementing Maximal Ratio Combining (MRC), Equal Gain Combining (EGC), and Selection Combining (SC), and SVC|
+| `bler_mrc_impcsi_eva.m.m` | Core |Plots BLER vs. SNR for SVC-MRC under perfect CSI (\epsilon = 0) and imperfect CSI (\epsilon = 0.2, 0.7)|
 ## 📂 Required Files
 
 -channel_models.m and svc_encoder_decoder.m must remain in the working directory or be added to the MATLAB path.
