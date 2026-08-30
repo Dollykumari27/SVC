@@ -1,11 +1,11 @@
 # Error Rate Analysis of Sparse Vector Coding withDiversity Techniques in the Presence of TransceiverHardware Impairments
-Manuscript ID: IEEE LAT Submission ID: 9490 Authors:
+Manuscript ID: IEEE LAT Submission ID: 10879  Authors:
 
 Dolly Kumari
 Maddu Narasimha
 Pradeep Kumar Rathore
 Shravan Kumar Bandari 
-
+## 📁 Description 
 Research and simulation of Sparse Vector Coding (SVC) for 6G URLLC. Focused on the error rate analysis of short-packet communications using diversity techniques to meet strict reliability requirements.
 System Model:In the short-packet regime, communication is performed using finite and relatively small blocklengths, where each transmitted packet contains only a limited number of symbols. Unlike classical information theory, which assumes infinitely long codewords, practical systems such as URLLC operate under strict latency constraints that require short packets.
 As a result, reliable communication becomes more challenging because:
@@ -35,3 +35,32 @@ This approach improves reliability because the energy is concentrated on a few c
 Diversity Mechanism: Detail the specific diversity (MRC, EGC, and SC) being aided by SVC.
 
 Metrics: Focus on Block Error Rate (BLER) vs. Signal-to-Noise Ratio (SNR).
+
+## 📁 Included Scripts
+This repository contains all scripts required to reproduce the simulation and numerical results.
+
+## 📁 Included Scripts
+
+| Script | Related Figure(s) | Description |
+| :--- | :--- | :--- |
+| `sim_epa_diversity.m` | Fig. 2 (a, b,c) | Computes BER/SER vs. SNR under the EPA (Extended Pedestrian A) channel model comparing MRC, EGC, and SC under varying hardware impairment levels ($\kappa$). |
+| `sim_eva_diversity.m` | Fig. 3 (a, b,c) | Computes BER/SER vs. SNR under the EVA (Extended Vehicular A) channel model comparing MRC, EGC, and SC with residual transceiver distortions. |
+| `svc_encoder_decoder.m` | Helper / Core | Implements sparse vector modulation, mapping, and sparsity-aware detection routines. |
+| `channel_models.m` | Helper | Generates multipath fading tap profiles and Doppler spectra for EPA and EVA channel realizations. |
+
+## 📂 Required Files
+
+-channel_models.m and svc_encoder_decoder.m must remain in the working directory or be added to the MATLAB path.
+-Hardware Impairment Parameters: Residual error vector magnitude (EVM) parameters $\kappa_{tx}$ and $\kappa_{rx}$ are configured inside sim_epa_diversity.m and sim_eva_diversity.m.
+-All scripts are self-contained and generate synthetic channel realizations on the fly.
+
+## 💻 Requirements
+
+- MATLAB R2025a or later.
+- Communications Toolbox
+- Signal Processing Toolbox
+
+## ✉️ Contact
+
+For questions or replication of results, contact: dolly27sep@gmail.com
+  
