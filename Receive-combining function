@@ -1,9 +1,0 @@
-function [Z, Phi] = receive_combining(y, H, W, p)
-
-%% Diversity combining
-Z =   W * y;
-
-%% Effective sensing matrix
-Phi = W * H * c_svc;
-
-end
