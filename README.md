@@ -1,10 +1,10 @@
 # Error Rate Analysis of Sparse Vector Coding withDiversity Techniques in the Presence of TransceiverHardware Impairments
 Manuscript ID: IEEE LAT Submission ID: 10879  Authors:
 
-Dolly Kumari
-Maddu Narasimha
-Pradeep Kumar Rathore
-Shravan Kumar Bandari 
+Dolly Kumari, 
+Maddu Narasimha,
+Pradeep Kumar Rathore, 
+Shravan Kumar Bandari,  
 ## 📁 Description 
 Research and simulation of Sparse Vector Coding (SVC) for 6G URLLC. Focused on the error rate analysis of short-packet communications using diversity techniques to meet strict reliability requirements.
 System Model:In the short-packet regime, communication is performed using finite and relatively small blocklengths, where each transmitted packet contains only a limited number of symbols. Unlike classical information theory, which assumes infinitely long codewords, practical systems such as URLLC operate under strict latency constraints that require short packets.
