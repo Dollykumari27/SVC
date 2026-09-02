@@ -1,0 +1,112 @@
+clc; 
+clear all;
+
+% Parameters
+kappa = [0 0.4] ;                  % together Tx and Rx impairments, kappa=0 means ideal case
+channel_mode = 5;              % 1:AWGN, 2: IID Rayleigh, 3: EPA, 4: ETU, 5: EVA
+bi   = 12;                              % total number of bits used
+N_svc   = 96;                       % size of sparse vector
+Nr      = 2;                            % number of receiving antennas
+snr_db  = 0:2:20;                 % SNR in dB
+snr     = 10.^(snr_db/10);     % SNR in linear scale
+nTrials = 1e5;                       % Total number of trials
+
+Rep = 8;
+m   = 42;                             % spreading length
+mu=2;
+K   = 2;                               % sparsity
+Lmmp = 4;                          % Number of expansions in MMP
+lmax = power(Lmmp, K);   % Maximum number of search candidates
+%% Hardware Impairment Parameters
+% kappa: transmitter distortion coefficient
+% beta:  receiver distortion coefficient
+% kappa = 0.4;   % Transmitter HI level (EVM-based), typical: 0.05–0.15
+% beta  = 0.3;    % Receiver HI level,              typical: 0.05–0.15
+%% Codebook Generation
+[c_svc,  mu_max_svc]  = codebook_gen(m, N_svc,  mu);
+%% Result matrices
+Succ_supp_svc  = zeros(nTrials, length(snr_db));
+BLER_svc       = zeros(length(kappa), length(snr_db));
+%% Main Loop
+tic;
+for ikappa=1:length(kappa)
+for snr_count = 1:length(snr_db)
+    snr_db_temp = snr_db(snr_count);
+    snr_temp    = snr(snr_count);
+    for Trial = 1:nTrials
+        if mod(Trial, 1000) == 0
+            fprintf('Kappa = %d  | SNR = %d dB | Trial: %d / %d\n', kappa(ikappa), snr_db_temp, Trial, nTrials);
+        end
+        %% ---- Bit & Symbol Generation ----
+        bitsSVC      = randi([0 1], 1, bi);
+        bits_char  = num2str(bitsSVC);
+        w10        = bin2dec(bits_char);
+
+        %% ---- Index Mapping ----
+        Supp_svc_tx  = sort(randperm(N_svc,  K), 'ascend');
+        %% ---- Sparse Vectors ----
+        s_svc  = zeros(N_svc,  1);
+        s_svc(Supp_svc_tx(1))  = 1;
+        s_svc(Supp_svc_tx(2))  = 1i;
+        
+        %% ---- Spread & Normalize ----
+        x_svc  = (1/sqrt(K)) * c_svc  * s_svc;
+        nfX    = sqrt(sum(x_svc  .* conj(x_svc),  1));
+        x_svc  = bsxfun(@rdivide, x_svc,  nfX);       
+        %% ---- Transmitter Hardware Impairment ----- Channel + Receiver Processing ----
+        y_svc   = []; H_svc   = []; noise_svc   = []; W_svc   = [];
+        for inr = 1:Nr
+            % AWGN noise
+            noise_temp = 1/sqrt(snr(snr_count))*1/sqrt(m)*1/sqrt(2)*(randn(m,1) + 1i*randn(m,1));
+
+            %% --- SVC branch ---
+            [y_temp_svc, H_temp1_svc] = channel(x_svc, snr, channel_mode, noise_temp, Rep);
+            HWI=sqrt(kappa(ikappa)^2/2)*(randn(m,1) + 1i*randn(m,1));
+            y_temp_svc1   = y_temp_svc + HWI;
+            % Effective noise = AWGN + RX distortion (used in yNew reconstruction)
+            noise_svc_hi=noise_temp;
+            hF_svc   = norm(diag(H_temp1_svc), 'fro');
+            w_temp_svc = conj(H_temp1_svc) ./ hF_svc;
+            W_svc    = diag(W_svc, w_temp_svc);
+            H_svc    = [H_svc;   H_temp1_svc];
+            y_svc    = [y_svc;   y_temp_svc1];
+            noise_svc = [noise_svc;  noise_svc_hi];         
+        end
+
+        %% ---- Beamforming Combining (NO extra distortion here) ----
+        Z_svc  =  W_svc * y_svc;
+
+        %% ---- SVC: MMP Recovery ----
+        phi_new_svc = W_svc * H_svc * c_svc;
+        [RecSig_svc, support_rx_svc, ~] = islsp_EstMMP_BF_reuse(Z_svc, phi_new_svc, K, Lmmp, lmax);
+        support_rx_svc = sort(support_rx_svc, 'ascend');
+        Succ_supp_svc(Trial, snr_count) = isequal(Supp_svc_tx, support_rx_svc);     
+
+    end % trial loop
+end % SNR loop
+%% ---- BLER Computation ----
+Avg_succ_svc  = mean(Succ_supp_svc, 1);
+BLER_svc(ikappa,:)     = 1 - Avg_succ_svc;
+time_taken = toc;
+fprintf('Total time = %.2f s\n', time_taken);
+end %kappa loop
+%% ---- Plot ----
+width = 5; 
+height = 4; 
+alw = 1.2; 
+fsz = 12; 
+lw = 1.5; 
+msz = 7;
+
+% figure;
+pos = get(gcf, 'Position');
+set(gcf, 'Position', [pos(1) pos(2) width*100, height*100]);
+set(0, 'defaultAxesFontName', 'Times New Roman');
+
+semilogy(snr_db, BLER_svc,  '-x', 'LineWidth', lw, 'MarkerSize', msz); hold on;
+grid on
+
+xlabel('SNR (dB)', 'FontSize', fsz);
+ylabel('BLER',     'FontSize', fsz);
+% legend('SVC (HI)', 'ESVC (HI)', 'Location', 'southwest', 'FontSize', fsz);
+% axis([10 20 0.99e-5 1])
