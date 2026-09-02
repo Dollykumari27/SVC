@@ -39,8 +39,6 @@ Metrics: Focus on Block Error Rate (BLER) vs. Signal-to-Noise Ratio (SNR).
 ## 📁 Included Scripts
 This repository contains all scripts required to reproduce the simulation and numerical results.
 
-## 📁 Included Scripts
-
 | Script | Related Figure(s) | Description |
 ## 📁 Included Scripts
 
