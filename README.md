@@ -50,9 +50,9 @@ This repository contains all scripts required to reproduce the simulation and nu
 | `bler_varryB.m` | Fig. 4 (a, b, c) | Evaluates PER performance comparison for MRC, EGC, and SC by varying the number of resource blocks ($M \in \{24, 42, 63\}$) with $N = 2$ under the EVA channel. |
 | `bler_mrc_varryK.m` | Fig. 5 | Evaluates the impact of decoding success probability as a function of sparsity level ($K \in \{2, 3, 4\}$) on SVC-MRC. |
 | `sim_mrc_vehicular_b.m` | Fig. 6 | Simulates and plots PER performance comparing SVC with MRC, EGC, and SC over the 3GPP Vehicular-B (VB) six-tap fading channel. |
-| `bler_mrc_impcsi_eva.m` | Core / Fig. Result | Plots BLER vs. SNR for SVC-MRC under perfect CSI ($\epsilon = 0$) and imperfect CSI ($\epsilon = 0.2, 0.7$) over the EVA channel. |
-| `Ideal_vs_nonideal.m` | Core | Modular combining implementation evaluating MRC performance comparison between ideal and hardware-impaired transceiver conditions. |
-| `Latency_SVC_DiversityComb.m` | Core | Analyzes processing and decoding latency across MRC, EGC, SC, and baseline SVC diversity combining schemes. |
+| `bler_mrc_impcsi_eva.m` | Core / Fig. 8 Result | Plots BLER vs. SNR for SVC-MRC under perfect CSI ($\epsilon = 0$) and imperfect CSI ($\epsilon = 0.2, 0.7$) over the EVA channel. |
+| `Ideal_vs_nonideal.m` | Core/ Fig. 7 | Modular combining implementation evaluating MRC performance comparison between ideal and hardware-impaired transceiver conditions. |
+| `Latency_SVC_DiversityComb.m` | Core/ Fig. 9 | Analyzes processing and decoding latency across MRC, EGC, SC, and baseline SVC diversity combining schemes. |
 | `svc_diversity_combiner.m` | Core Function | Modular combining function implementing Maximal Ratio Combining (MRC), Equal Gain Combining (EGC), and Selection Combining (SC). |
 | `mrc_combiner.m` | Helper / Core | Dedicated combining routine calculating antenna weights, equivalent observation vectors, and sensing matrices for MRC. |
 | `islsp_EstMMP_BF_reuse.m` | Helper / Core | Implements the Multipath Matching Pursuit (MMP) sparse signal recovery algorithm. |
