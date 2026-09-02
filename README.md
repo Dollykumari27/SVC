@@ -47,14 +47,17 @@ This repository contains all scripts required to reproduce the simulation and nu
 | Script | Related Figure(s) | Description |
 | :--- | :--- | :--- |
 | `main_svc_diversity_simulation.m` | Fig. 2 (a, b, c) & Fig. 3 (a, b, c) | Evaluates and plots BLER vs. SNR performance comparing **MRC**, **EGC**, and **SC** under realistic channel models (EPA/EVA) and transceiver hardware impairments. |
+| `bler_varryB.m` | Fig. 4 (a, b, c) | Evaluates PER performance comparison for MRC, EGC, and SC by varying the number of resource blocks ($M \in \{24, 42, 63\}$) with $N = 2$ under the EVA channel. |
+| `bler_mrc_varryK.m` | Fig. 5 | Evaluates the impact of decoding success probability as a function of sparsity level ($K \in \{2, 3, 4\}$) on SVC-MRC. |
+| `sim_mrc_vehicular_b.m` | Fig. 6 | Simulates and plots PER performance comparing SVC with MRC, EGC, and SC over the 3GPP Vehicular-B (VB) six-tap fading channel. |
+| `bler_mrc_impcsi_eva.m` | Core / Fig. Result | Plots BLER vs. SNR for SVC-MRC under perfect CSI ($\epsilon = 0$) and imperfect CSI ($\epsilon = 0.2, 0.7$) over the EVA channel. |
+| `Ideal_vs_nonideal.m` | Core | Modular combining implementation evaluating MRC performance comparison between ideal and hardware-impaired transceiver conditions. |
+| `Latency_SVC_DiversityComb.m` | Core | Analyzes processing and decoding latency across MRC, EGC, SC, and baseline SVC diversity combining schemes. |
 | `svc_diversity_combiner.m` | Core Function | Modular combining function implementing Maximal Ratio Combining (MRC), Equal Gain Combining (EGC), and Selection Combining (SC). |
+| `mrc_combiner.m` | Helper / Core | Dedicated combining routine calculating antenna weights, equivalent observation vectors, and sensing matrices for MRC. |
 | `islsp_EstMMP_BF_reuse.m` | Helper / Core | Implements the Multipath Matching Pursuit (MMP) sparse signal recovery algorithm. |
-| `algo_mmp.m` | Helper / Core | Implements the Multipath Matching Pursuit (MMP) sparse recovery algorithm. |
-| `channel.m` | Helper | Simulates multipath fading channel realizations across standard profiles (EPA, EVA, ETU, Rayleigh, AWGN). |
-| `Ideal_vs_nonideal.m` | Core| Modular combining implementing Maximal Ratio Combining (MRC) with hardware impairment |
-| `Latency_SVC_DiversityComb.m` | Core | Latency implementing Maximal Ratio Combining (MRC), Equal Gain Combining (EGC), and Selection Combining (SC), and SVC|
-| `bler_mrc_impcsi_eva.m.m` | Core |Plots BLER vs. SNR for SVC-MRC under perfect CSI (\epsilon = 0) and imperfect CSI (\epsilon = 0.2, 0.7)|
-## 📂 Required Files
+| `algo_mmp.m` | Helper / Core | Implements the standard Multipath Matching Pursuit (MMP) sparse reconstruction routines. |
+| `channel.m` | Helper | Generates multipath fading channel realizations across standard 3GPP profiles (EPA, EVA, ETU, 5G Vehicular-B, Rayleigh, AWGN). |
 
 -channel_models.m and svc_encoder_decoder.m must remain in the working directory or be added to the MATLAB path.
 -Hardware Impairment Parameters: Residual error vector magnitude (EVM) parameters $\kappa_{tx}$ and $\kappa_{rx}$ are configured inside sim_epa_diversity.m and sim_eva_diversity.m.
