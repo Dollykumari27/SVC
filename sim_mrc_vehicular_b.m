@@ -5,34 +5,15 @@ close all;
 %% System Parameters
 snr_db       = -15:2:5;              % Eb/N0 range matching Fig. 6
 snr          = 10.^(snr_db / 10);    % Linear scale SNR
-channel_mode = 6;                    % 6: 5G Vehicular-B (6 taps)
+channel_mode = 2;                    %
 N_svc        = 96;                   % SVC codebook dimension
-m            = 42;                   % Spreading sequence length
 Nr           = 2;                    % Number of Rx antennas
-Rep          = 8;                    % Repetition factor
+Rep          = 2;                    % Repetition factor
 K            = 2;                    % Sparsity level
 mu           = 1;                    % Modulation order parameter
 Lmmp         = 2;                    % MMP tree search width
 nTrials      = 1e5;                  % Monte Carlo iterations per SNR point
 
-%% Codebook Generation
-alpha_svc = sqrt(2 * ((2^mu) - 1) / 3);
-Cbest = [];
-for i = 1:1e3
-    c_cand = (1 / alpha_svc) * randsrc(m, N_svc);
-    nf     = sqrt(sum(c_cand .* conj(c_cand), 1));
-    cN     = bsxfun(@rdivide, c_cand, nf);
-    mu_val = max(max(triu(abs(cN' * cN), 1)));
-    if mu_val > 0.7 && mu_val < 0.72
-        Cbest = c_cand;
-        break;
-    end
-end
-if isempty(Cbest)
-    Cbest = c_cand;
-end
-c_svc      = normc(Cbest);
-mu_max_svc = max(max(triu(abs(c_svc' * c_svc), 1)));
 
 %% Performance Containers
 PER_MRC = zeros(1, length(snr_db));
@@ -75,7 +56,7 @@ for s_idx = 1:length(snr_db)
         lmax = power(Lmmp, K);
         
         % Call dedicated MRC Combining Function
-        [Z_mrc, phi_mrc] = mrc_combiner(y_svc, H_svc, c_svc, Nr, m);
+        Z_mrc = mrc_combiner(y_svc, H_svc, c_svc, Nr, m);
         
         % MMP Detection
         [~, supp_mrc, ~] = islsp_EstMMP_BF_reuse(Z_mrc, phi_mrc, K, Lmmp, lmax);
