@@ -17,13 +17,7 @@ function [x_mmp_s x_supp idx_depth] = algo_mmp(y, Phi, K, L, N)
 	nodes_parents		= s_path_info(:,ones(L, 1));
 	 
 	%% Initialize the best path.
-	[supp_mag supp_idx]	= sort(abs(Phi'*y), 'descend');
-	for idx=1:L
-		supps	= supp_idx(idx);
-		
-		x_hat	= pinv(Phi(:,supps))*y;
-		residu	= y-x_hat.*Phi(:,supps);
-		
+	for idx=1:L		
 		nodes_parents(idx).supps	= supps;
 		nodes_parents(idx).residu	= residu;
 		nodes_parents(idx).x_hat	= x_hat;
@@ -55,20 +49,10 @@ function [x_mmp_s x_supp idx_depth] = algo_mmp(y, Phi, K, L, N)
 				if 0 ~= find( supp_idx(idx_child) == nodes_parents(idx_best).supps )
 					continue;
 				end
-				
-				supps			= [nodes_parents(idx_best).supps supp_idx(idx_child)];
-				[x_hat MInv]	= islsp_EstX_reuse(	y,...
-													Phi(:,nodes_parents(idx_best).supps),...
-													Phi(:,supp_idx(idx_child)),...
-													nodes_parents(idx_best).prev_inv);
-				
-				residu			= y-Phi(:,supps)*x_hat;
 
 				%%
 				% Check the duplication.
 				same_hashes	= find( [nodes_children(:).suppHash] == my_hash_f(supps) );
-				
-				x_tmp_test	= sort(supps);
 				
 				dupl_test	= 0;
 				
@@ -117,14 +101,4 @@ function [x_mmp_s x_supp idx_depth] = algo_mmp(y, Phi, K, L, N)
 		end
 	end
 end
-
-%%
-function [x_hat reuse_inv] = algo_mmp(y, prev_cols, new_col, reuse_Minv)
-
-	reuse_b		= new_col*prev_cols;
-	xi			= reuse_b*reuse_Minv;
-	reuse_p		= 1/(norm(new_col)^2 - reuse_b*xi);
-	reuse_inv	= [(reuse_Minv+reuse_p*xi'*xi) (-reuse_p*xi');(-reuse_p*xi) reuse_p];
-
-	x_hat		= reuse_inv*[(prev_cols'*y) ];
 end
