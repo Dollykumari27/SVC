@@ -12,15 +12,13 @@ function [Z_comb, phi_comb] = svc_diversity_combiner(technique, y_svc, H_svc, c_
 %
 % Outputs:
 %   Z_comb    - Combined measurement vector
-%   phi_comb  - Effective sensing matrix for sparse recovery
+
 
     switch upper(technique)
         case 'MRC'
             W_svc = [];
             for inr = 1:Nr
-                H_sub = H_svc((inr-1) + 1 : inr*m, :);
-                hF = norm(diag(H_sub), 'fro');
-                w_temp = conj(H_sub) ./ hF;
+                H_sub = H_svc((inr-1) + 1 : inr*m, :
                 W_svc = diag(W_svc, w_temp);
             end
             Z_comb   =  W_svc * y_svc;
@@ -37,12 +35,11 @@ function [Z_comb, phi_comb] = svc_diversity_combiner(technique, y_svc, H_svc, c_
             % Selection combining based on maximum instantaneous branch SNR
             [~, best_idx] = max(snr_svc);
             H_sc   = H_svc((best_idx-1)*m + 1 : best_idx*m, 1:m);
-            hF     = norm(diag(H_sc), 'fro');
-            W_sc   = conj(H_sc) ./ hF;
+        
             y_sc   = y_svc((best_idx-1)+ 1 : best_idx*m);
             
             Z_comb   = (1 / sqrt(Nr)) * W_sc * y_sc;
-            phi_comb = W_sc * H_sc * c_svc;
+            phi_comb =  H_sc * c_svc;
 
         otherwise
             error('Invalid technique specified. Choose ''MRC'', ''EGC'', or ''SC''.');
