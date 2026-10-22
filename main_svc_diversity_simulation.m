@@ -7,30 +7,12 @@ snr_db       = -10:2:10;             % SNR range in dB
 snr          = 10.^(snr_db / 10);    % Linear scale SNR
 channel_mode = 1;                    % 1:AWGN, 2:Rayleigh, 3:EPA, 4:ETU, 5:EVA, 
 N_svc        = 96;                   % SVC codebook dimension
-m            = 42;                   % Spreading sequence length
 Nr           = 2;                    % Number of Rx antennas
 Rep          = 2;                    % Repetition factor
 K            = 2;                    % Sparsity level
 mu           = 1;                    % Modulation order parameter
 Lmmp         = 8;% 
 nTrials      = 1e4;                  % Monte Carlo iterations per SNR point
-
-%% Codebook Generation
-alpha_svc = sqrt(2 * ((2^mu) - 1) / 3);
-Cbest = [];
-for i = 1:1e3
-    c_cand = (1 / alpha_svc) * randsrc(m, N_svc);  
-    mu_val = max(max(triu(abs(cN' * cN), 1)));
-    if mu_val > 0.3 && mu_val < 0.50
-        Cbest = c_cand;
-        break;
-    end
-end
-if isempty(Cbest)
-    Cbest = c_cand;
-end
-c_svc      = normc(Cbest);
-mu_max_svc = max(max(triu(abs(c_svc' * c_svc), 1)));
 
 %% Performance Containers
 BLER_MRC = zeros(1, length(snr_db));
@@ -60,38 +42,36 @@ for s_idx = 1:length(snr_db)
         
         % Channel & Receiver Modeling
         y_svc = []; H_svc = []; noise_svc = []; snr_svc = [];
-        for inr = 1:Nr
-            noise_temp = (1 / sqrt(curr_snr)) * (1 / sqrt(m)) * (1 / sqrt(2)) * (randn(m, 1) + 1i * randn(m, 1));
+        
+            noise_temp = (1 / sqrt(curr_snr)) * (1 / sqrt(2)) * (1 / sqrt(2)) * (randn(1) + 1i * randn(1));
             varNoise   = var(noise_temp);
             
             % Generate Channel Matrix
-            h_temp = (1 / sqrt(2)) * (randn(m, 1) + 1i * randn(m, 1))
+            h_temp = (1 / sqrt(2)) * (randn( 1) + 1i * randn( 1))
             H_temp = diag(h_temp);
             y_temp = H_temp * x_svc + noise_temp;
             
-            snr_branch = (trace(abs(H_temp).^2) * var_svc) / varNoise;
+            snr_branch = (abs(H_temp).^2* var_svc) / varNoise;
             snr_svc    = [snr_svc, snr_branch];
             
             H_svc      = [H_svc; H_temp];
             y_svc      = [y_svc; y_temp];
-            noise_svc  = [noise_svc; noise_temp];
-        end
-        
+            noise_svc  = [noise_svc; noise_temp];         
         lmax = power(Lmmp, K);
         
         % 1. MRC Combining & Detection
-        [Z_mrc, phi_mrc] = svc_diversity_combiner('MRC', y_svc, H_svc, c_svc, Nr, m, snr_svc);
-        [~, supp_mrc, ~] = islsp_EstMMP_BF_reuse(Z_mrc, phi_mrc, K, Lmmp, lmax)
+        [Z_mrc, mrc] = svc_diversity_combiner('MRC', y_svc, H_svc, c_svc, Nr, snr_svc);
+        [~, supp_mrc, ~] = algo_omp(Z_mrc, K, Lmmp, lmax)
         succ_mrc = succ_mrc + isequal(support_tx, sort(supp_mrc, 'ascend'));
         
         % 2. EGC Combining & Detection
-        [Z_egc, phi_egc] = svc_diversity_combiner('EGC', y_svc, H_svc, c_svc, Nr, m, snr);
+        [Z_egc, egc] = svc_diversity_combiner('EGC', y_svc, H_svc, c_svc, Nr, snr);
         [supp_egc, ~]    = algo_omp(Z_egc, phi_egc, K, noise_svc);
         succ_egc = succ_egc + isequal(support_tx, sort(supp_egc, 'ascend'));
         
         % 3. SC Combining & Detection
-        [Z_sc, phi_sc]   = svc_diversity_combiner('SC', y_svc, H_svc, c_svc, Nr, m, snr);
-        [~, supp_sc, ~]  = islsp_EstMMP_BF_reuse(Z_sc, phi_sc, K, Lmmp, lmax);
+        [Z_sc, sc]   = svc_diversity_combiner('SC', y_svc, H_svc, c_svc, Nr, snr);
+        [~, supp_sc, ~]  =algo_omp(Z_sc, K, Lmmp, lmax);
         succ_sc  = succ_sc + isequal(support_tx, sort(supp_sc, 'ascend'))
     end
     
