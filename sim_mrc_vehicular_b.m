@@ -58,9 +58,9 @@ for s_idx = 1:length(snr_db)
         % Call dedicated MRC Combining Function
         Z_mrc = mrc_combiner(y_svc, H_svc, c_svc, Nr, m);
         
-        % MMP Detection
+        
         [~, supp_mrc, ~] = islsp_EstMMP_BF_reuse(Z_mrc, phi_mrc, K, Lmmp, lmax);
-        succ_mrc         = succ_mrc + isequal(support_tx, sort(supp_mrc, 'ascend'));
+       
     end
     
     PER_MRC(s_idx) = 1 - (succ_mrc / nTrials);
