@@ -15,9 +15,9 @@ snr_db = 0:2:14;
 % Curve 1: \epsilon = 0   (pCSI)
 % Curve 2: \epsilon = 0.2 (ipCSI)
 % Curve 3: \epsilon = 0.7 (ipCSI)
-bler_eps_0_0 = [1.25e-1, 4.45e-2, 1.10e-2, 2.05e-3, 3.00e-4, 3.40e-5, 5.00e-6, 1.00e-6];
-bler_eps_0_2 = [1.60e-1, 6.20e-2, 1.65e-2, 3.10e-3, 4.70e-4, 4.20e-5, 7.00e-6, 1.50e-6];
-bler_eps_0_7 = [2.25e-1, 9.00e-2, 2.60e-2, 5.50e-3, 9.00e-4, 1.10e-4, 1.20e-5, 2.00e-6];
+bler_eps_0_0 = [1.25e-1, .45e-2, 1.10e-2, .05e-3, .00e-4, 3.40e-5, .00e-6, 1.00e-6];
+bler_eps_0_2 = [1.60e-1, .20e-2, 1.65e-2, .10e-3, .70e-4, 4.20e-5, .00e-6, 1.50e-6];
+bler_eps_0_7 = [2.25e-1, .00e-2, .60e-2, 5.50e-3, .00e-4, 1.10e-4, 1.20e-5, .00e-6];
 
 %% 2. Figure Setup & Publication Styling
 figure('Units', 'inches', 'Position', [2, 2, 4.8, 4.2], 'Color', [1 1 1]);
