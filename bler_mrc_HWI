@@ -54,16 +54,13 @@ for snr_count = 1:length(snr_db)
         for inr = 1:Nr
             % AWGN noise
             noise_temp = 1/sqrt(snr(snr_count))*1/sqrt(m)*1/sqrt(2)*(randn(m,1) + 1i*randn(m,1));
-      
         end
-
         %% ---- Beamforming Combining (NO extra distortion here) ----
         Z_svc  =  W_svc * y_svc;
 
         %% ---- SVC: MMP Recovery ----
         phi_new_svc = W_svc * H_svc * c_svc;
         [RecSig_svc, support_rx_svc, ~] = islsp_EstMMP_BF_reuse(Z_svc, phi_new_svc, K, Lmmp, lmax);
-        support_rx_svc = sort(support_rx_svc, 'ascend');
         Succ_supp_svc(Trial, snr_count) = isequal(Supp_svc_tx, support_rx_svc);     
 
     end % trial loop
