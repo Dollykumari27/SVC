@@ -46,31 +46,15 @@ for snr_count = 1:length(snr_db)
         Supp_svc_tx  = sort(randperm(N_svc,  K), 'ascend');
         %% ---- Sparse Vectors ----
         s_svc  = zeros(N_svc,  1);
-        s_svc(Supp_svc_tx(1))  = 1;
-        s_svc(Supp_svc_tx(2))  = 1i;
-        
         %% ---- Spread & Normalize ----
-        x_svc  = (1/sqrt(K)) * c_svc  * s_svc;
-        nfX    = sqrt(sum(x_svc  .* conj(x_svc),  1));
+     
         x_svc  = bsxfun(@rdivide, x_svc,  nfX);       
         %% ---- Transmitter Hardware Impairment ----- Channel + Receiver Processing ----
         y_svc   = []; H_svc   = []; noise_svc   = []; W_svc   = [];
         for inr = 1:Nr
             % AWGN noise
             noise_temp = 1/sqrt(snr(snr_count))*1/sqrt(m)*1/sqrt(2)*(randn(m,1) + 1i*randn(m,1));
-
-            %% --- SVC branch ---
-            [y_temp_svc, H_temp1_svc] = channel(x_svc, snr, channel_mode, noise_temp, Rep);
-            HWI=sqrt(kappa(ikappa)^2/2)*(randn(m,1) + 1i*randn(m,1));
-            y_temp_svc1   = y_temp_svc + HWI;
-            % Effective noise = AWGN + RX distortion (used in yNew reconstruction)
-            noise_svc_hi=noise_temp;
-            hF_svc   = norm(diag(H_temp1_svc), 'fro');
-            w_temp_svc = conj(H_temp1_svc) ./ hF_svc;
-            W_svc    = diag(W_svc, w_temp_svc);
-            H_svc    = [H_svc;   H_temp1_svc];
-            y_svc    = [y_svc;   y_temp_svc1];
-            noise_svc = [noise_svc;  noise_svc_hi];         
+      
         end
 
         %% ---- Beamforming Combining (NO extra distortion here) ----
