@@ -19,28 +19,15 @@ function [Z_comb, phi_comb] = svc_diversity_combiner(technique, y_svc, H_svc, c_
             W_svc = [];
             for inr = 1:Nr
                 H_sub = H_svc((inr-1) + 1 : inr*m, :
-                W_svc = diag(W_svc, w_temp);
             end
-            Z_comb   =  W_svc * y_svc;
-            phi_comb = W_svc * H_svc * c_svc;
-
+            Z_comb   =  H_svc * y_svc;
         case 'EGC'
             % Co-phased equalization
             H_egc    = exp(-1j * angle(H_svc));
-            y_egc    = sum(H_egc .* y_svc, 2);
-            Z_comb   = y_egc;
-            phi_comb = H_svc * c_svc;
-
         case 'SC'
             % Selection combining based on maximum instantaneous branch SNR
             [~, best_idx] = max(snr_svc);
-            H_sc   = H_svc((best_idx-1)*m + 1 : best_idx*m, 1:m);
-        
-            y_sc   = y_svc((best_idx-1)+ 1 : best_idx*m);
-            
             Z_comb   = (1 / sqrt(Nr)) * W_sc * y_sc;
-            phi_comb =  H_sc * c_svc;
-
         otherwise
             error('Invalid technique specified. Choose ''MRC'', ''EGC'', or ''SC''.');
     end
