@@ -16,69 +16,12 @@ function [x_mmp_s x_supp idx_depth] = algo_mmp(y, Phi, K, L, N)
 
 	nodes_parents		= s_path_info(:,ones(L, 1));
 	 
-	%% Initialize the best path.
-	for idx=1:L		
-		nodes_parents(idx).supps	= supps;
-		nodes_parents(idx).residu	= residu;
-		nodes_parents(idx).x_hat	= x_hat;
-		nodes_parents(idx).prev_inv	= 1/(norm(Phi(:,supps))^2);
-		nodes_parents(idx).res_norm	= norm(residu);
-		nodes_parents(idx).suppHash	= my_hash_f(supps);
-	end
+
 
 	%% General iteration
 	idx_abs_child	= L;
 	
-	while (idx_depth < K-1)
-		idx_depth	= idx_depth+1;
-		
-		search_len	= min(idx_abs_child, N_max);
-
-		%nodes_children(search_len*L)	= s_path_info;
-		nodes_children		= s_path_info(:,ones(search_len*L, 1));
-		
-		idx_abs_child			= 0;
-		for idx_best=1:search_len
-			[supp_mag supp_idx]	= sort(abs(Phi'*nodes_parents(idx_best).residu), 'descend');
-
-			% Generate the child nodes
-			for idx_child=1:L
-				% supps	= union(best_path_par(idx_best).supps, supp_idx(idx_child));
-				
-				% check existence among the previous selected indices
-				if 0 ~= find( supp_idx(idx_child) == nodes_parents(idx_best).supps )
-					continue;
-				end
-
-				%%
-				% Check the duplication.
-				same_hashes	= find( [nodes_children(:).suppHash] == my_hash_f(supps) );
-				
-				dupl_test	= 0;
-				
-				for idx_hash=same_hashes
-					x_tmp	= sort(nodes_children(idx_hash).supps);
-					
-					if 0 == sum(x_tmp-x_tmp_test)
-						dupl_test	= 1;
-						break;
-					end
-				end
-				
-				if dupl_test
-					continue;
-				end
-				
-				%%
-				% Add new child node
-				idx_abs_child	= idx_abs_child+1;
-				
-				nodes_children(idx_abs_child).supps		= supps;
-				nodes_children(idx_abs_child).residu	= residu;
-				nodes_children(idx_abs_child).x_hat		= x_hat;
-				nodes_children(idx_abs_child).prev_inv	= MInv;
-				nodes_children(idx_abs_child).res_norm	= norm(residu);
-				nodes_children(idx_abs_child).suppHash	= my_hash_f(supps);
+	
 				
 				
 			end
@@ -91,10 +34,6 @@ function [x_mmp_s x_supp idx_depth] = algo_mmp(y, Phi, K, L, N)
 		nodes_parents	= nodes_children(1:idx_abs_child);
 		
 		[resi_val resi_idx] = sort([nodes_parents(:).res_norm]);
-
-		x_mmp_s			= zeros(nCols, 1);
-		x_supp			= nodes_parents(resi_idx(1)).supps;
-		x_mmp_s(x_supp)	= nodes_parents(resi_idx(1)).x_hat;
 
 		if N_max < idx_abs_child
 			nodes_parents(resi_idx(N_max:end))	= [];
