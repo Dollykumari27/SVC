@@ -68,17 +68,15 @@ for im = 1:length(m_vec)
             % Sparse Support & Signal Generation
             support_tx = sort(randperm(N_svc, K), 'ascend');
             s_svc      = zeros(N_svc, 1);
-            s_svc(support_tx(1)) = 1;
-            s_svc(support_tx(2)) = 1i;
+           
             
             % Transmitted symbols per scheme codebook
-            x_mrc = c_mrc * (1 / sqrt(K)) * s_svc;
+     
             x_mrc = x_mrc ./ norm(x_mrc);
-            
-            x_egc = c_egc * (1 / sqrt(K)) * s_svc;
+                
             x_egc = x_egc ./ norm(x_egc);
             
-            x_sc  = c_sc * (1 / sqrt(K)) * s_svc;
+           
             x_sc  = x_sc ./ norm(x_sc);
             
             var_x_sc = var(x_sc);
@@ -100,29 +98,20 @@ for im = 1:length(m_vec)
                 [y_temp_egc, ~]      = channel(x_egc, curr_snr, channel_mode, noise_temp, Rep);
                 [y_temp_sc, ~]       = channel(x_sc,  curr_snr, channel_mode, noise_temp, Rep);
                                             
-                % 1. MRC Weights
-                w_mrc     = conj(H_temp) ./ hF;
-                W_mrc_stk = blkdiag(W_mrc_stk, w_mrc);
-                
-                % 2. EGC Weights
-                w_egc     = y_temp_egc .* diag(exp(-1i * angle(diag(H_temp)))) ./ hF;
-                W_egc_stk = blkdiag(W_egc_stk, w_egc);
+                                
                 
                 % Branch SNR for Selection Combining
                 varNoise   = var(noise_temp);
                 snr_branch = (trace(abs(H_temp).^2) * var_x_sc) / varNoise;
                 snr_sc     = [snr_sc, snr_branch];   
-                H_stack   = [H_stack];
-                y_mrc_stk = [y_mrc_stk; y_temp_mrc];
-                y_egc_stk = [y_egc_stk; y_temp_egc];
-                y_sc_stk  = [y_sc_stk; y_temp_sc];
+                
             end
             
             % ---------------- 1. MRC Detection ----------------
             Z_mrc   =  W_mrc_stk * y_mrc_stk;
     
             [~, supp_mrc, ~] = islsp_EstMMP_BF_reuse(Z_mrc, K, Lmmp, lmax);
-            succ_mrc =  isequal(support_tx, sort(supp_mrc, 'ascend'));
+          
             
             % ---------------- 2. EGC Detection ----------------
             Z_egc   =  W_egc_stk * y_egc_stk;
@@ -131,16 +120,11 @@ for im = 1:length(m_vec)
             
             
             % ---------------- 3. SC Detection -----------------
-            [~, best_idx] = max(snr_sc);
-            H_best = H_stack((best_idx - 1) * m + 1 : best_idx * m, 1:m);
-            y_best = y_sc_stk((best_idx - 1) * m + 1 : best_idx * m);
-            
-            
-            W_sc    = conj(H_best) ;
+         
             Z_sc    = (1 / sqrt(Nr)) * W_sc * y_best;
          
             [~, supp_sc, ~] = islsp_EstMMP_BF_reuse(Z_sc, phi_sc, K, Lmmp, lmax);
-            succ_sc = isequal(support_tx, sort(supp_sc, 'ascend'));
+         
         end
         
         BLER_MRC(im, s_idx) = 1 - (succ_mrc / nTrials);
