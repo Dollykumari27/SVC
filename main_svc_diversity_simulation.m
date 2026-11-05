@@ -31,12 +31,7 @@ for s_idx = 1:length(snr_db)
     
     for trial = 1:nTrials
         % Transmit Vector Generation
-        support_tx = sort(randper(N_svc, K), 'ascend');
         s_svc = zeros(N_svc, 1);
-        s_svc(support_tx(1)) = 1;
-        s_svc(support_tx(2)) = 1i;
-        
-        x_svc = c_svc  * s_svc;
         x_svc = bsxfun(@rdivide, x_svc, sqrt(sum(x_svc .* conj(x_svc), 1)));
         var_svc = var(x_svc);
         
@@ -53,12 +48,7 @@ for s_idx = 1:length(snr_db)
             
             snr_branch = (abs(H_temp).^2* var_svc) / varNoise;
             snr_svc    = [snr_svc, snr_branch];
-            
-            H_svc      = [H_svc; H_temp];
-            y_svc      = [y_svc; y_temp];
-            noise_svc  = [noise_svc; noise_temp];         
-        lmax = power(Lmmp, K);
-        
+                 
         % 1. MRC Combining & Detection
         [Z_mrc, mrc] = svc_diversity_combiner('MRC', y_svc, H_svc, c_svc, Nr, snr_svc);
         [~, supp_mrc, ~] = algo_omp(Z_mrc, K, Lmmp, lmax)
