@@ -10,7 +10,6 @@ Nr      = 2;                            % number of receiving antennas
 snr_db  = 0:2:20;                 % SNR in dB
 snr     = 10.^(snr_db/10);     % SNR in linear scale
 nTrials = 1e5;                       % Total number of trials
-
 Rep = 8;
 m   = 42;                             % spreading length
 mu=2;
@@ -41,13 +40,11 @@ for snr_count = 1:length(snr_db)
         bitsSVC      = randi([0 1], 1, bi);
         bits_char  = num2str(bitsSVC);
         w10        = bin2dec(bits_char);
-
         %% ---- Index Mapping ----
         Supp_svc_tx  = sort(randperm(N_svc,  K), 'ascend');
         %% ---- Sparse Vectors ----
         s_svc  = zeros(N_svc,  1);
         %% ---- Spread & Normalize ----
-     
         x_svc  = bsxfun(@rdivide, x_svc,  nfX);       
         %% ---- Transmitter Hardware Impairment ----- Channel + Receiver Processing ----
         y_svc   = []; H_svc   = []; noise_svc   = []; W_svc   = [];
@@ -57,9 +54,7 @@ for snr_count = 1:length(snr_db)
         end
         %% ---- Beamforming Combining (NO extra distortion here) ----
         Z_svc  =  W_svc * y_svc;
-
         %% ---- SVC: MMP Recovery ----
-        phi_new_svc = W_svc * H_svc * c_svc;
         [RecSig_svc, support_rx_svc, ~] = islsp_EstMMP_BF_reuse(Z_svc, phi_new_svc, K, Lmmp, lmax);
         Succ_supp_svc(Trial, snr_count) = isequal(Supp_svc_tx, support_rx_svc);     
 
