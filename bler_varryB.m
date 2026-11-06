@@ -103,34 +103,21 @@ for im = 1:length(m_vec)
                 % Branch SNR for Selection Combining
                 varNoise   = var(noise_temp);
                 snr_branch = (trace(abs(H_temp).^2) * var_x_sc) / varNoise;
-                snr_sc     = [snr_sc, snr_branch];   
-                
-            end
-            
+                snr_sc     = [snr_sc, snr_branch];                 
+            end           
             % ---------------- 1. MRC Detection ----------------
             Z_mrc   =  W_mrc_stk * y_mrc_stk;
-    
-            [~, supp_mrc, ~] = islsp_EstMMP_BF_reuse(Z_mrc, K, Lmmp, lmax);
-          
-            
+            [~, supp_mrc, ~] = islsp_EstMMP_BF_reuse(Z_mrc, K, Lmmp, lmax);  
             % ---------------- 2. EGC Detection ----------------
-            Z_egc   =  W_egc_stk * y_egc_stk;
-            
-            [~, supp_egc, ~] = islsp_EstMMP_BF_reuse(Z_egc, K, Lmmp, lmax);
-            
-            
-            % ---------------- 3. SC Detection -----------------
-         
-            Z_sc    = (1 / sqrt(Nr)) * W_sc * y_best;
-         
-            [~, supp_sc, ~] = islsp_EstMMP_BF_reuse(Z_sc, phi_sc, K, Lmmp, lmax);
-         
-        end
-        
+            Z_egc   =  W_egc_stk * y_egc_stk;     
+            [~, supp_egc, ~] = islsp_EstMMP_BF_reuse(Z_egc, K, Lmmp, lmax);       
+            % ---------------- 3. SC Detection -----------------       
+            Z_sc    = (1 / sqrt(Nr)) * W_sc * y_best;       
+            [~, supp_sc, ~] = islsp_EstMMP_BF_reuse(Z_sc, phi_sc, K, Lmmp, lmax);     
+        end     
         BLER_MRC(im, s_idx) = 1 - (succ_mrc / nTrials);
         BLER_EGC(im, s_idx) = 1 - (succ_egc / nTrials);
-        BLER_SC(im, s_idx)  = 1 - (succ_sc  / nTrials);
-        
+        BLER_SC(im, s_idx)  = 1 - (succ_sc  / nTrials);       
         fprintf('m=%d | SNR=%2d dB | BLER MRC: %.3e | EGC: %.3e | SC: %.3e\n', ...
             m, snr_db(s_idx), BLER_MRC(im, s_idx), BLER_EGC(im, s_idx), BLER_SC(im, s_idx));
     end
